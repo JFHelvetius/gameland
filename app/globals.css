@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0a14;
+  --surface: #12121f;
+  --surface2: #1a1a2e;
+  --border: rgba(255,255,255,0.08);
+  --text: #e2e8f0;
+  --muted: #64748b;
+}
+
+@media (prefers-color-scheme: dark) { :root { } }
+
+* { box-sizing: border-box; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.06) 2px,
+    rgba(0,0,0,0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.pixel { font-family: 'Press Start 2P', monospace; }
+
+.card-hover { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.card-hover:hover { transform: translateY(-4px); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
