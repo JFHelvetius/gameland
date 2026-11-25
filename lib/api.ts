@@ -59,6 +59,8 @@ export const getGames = (
 export const getGame = (gameId: string): Promise<GameDetail> =>
   fetch(`${API}/api/game/${gameId}`).then((r) => r.json());
 
-export const coverUrl = (gameId: string) => `${API}/api/covers/${gameId}`;
+const COVERS = "https://jfhelvetius.github.io/gameland-covers";
+export const coverUrl = (gameId: string) => `${COVERS}/${gameId}.jpg`;
+export const coverUrlSvg = (gameId: string) => `${COVERS}/${gameId}.svg`;
 
 export const downloadUrl = (gameId: string) => `${API}/download/${gameId}`;

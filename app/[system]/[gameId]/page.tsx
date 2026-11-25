@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { getGame, coverUrl, downloadUrl, type GameDetail } from "@/lib/api";
+import { getGame, coverUrl, coverUrlSvg, downloadUrl, type GameDetail } from "@/lib/api";
 
 export default function GamePage({
   params,
@@ -12,6 +12,10 @@ export default function GamePage({
   const { system, gameId } = use(params);
   const [game, setGame] = useState<GameDetail | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [coverSrc, setCoverSrc] = useState(() => coverUrl(gameId));
+  const handleCoverError = () => {
+    if (coverSrc.endsWith(".jpg")) setCoverSrc(coverUrlSvg(gameId));
+  };
 
   useEffect(() => {
     getGame(gameId).then(setGame).catch(() => {});
@@ -50,10 +54,11 @@ export default function GamePage({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={coverUrl(gameId)}
+                src={coverSrc}
                 alt={game.name}
                 className="w-full"
                 style={{ display: "block" }}
+                onError={handleCoverError}
               />
             </div>
           </div>

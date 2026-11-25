@@ -2,12 +2,17 @@
 
 import { useEffect, useState, use, useCallback, useRef } from "react";
 import Link from "next/link";
-import { getGames, getSystems, coverUrl, type GameSummary, type System } from "@/lib/api";
+import { getGames, getSystems, coverUrl, coverUrlSvg, type GameSummary, type System } from "@/lib/api";
 
 const PER_PAGE = 72;
 
 function GameCard({ g, color }: { g: GameSummary; color: string }) {
+  const [src, setSrc] = useState(() => coverUrl(g.id));
   const [imgErr, setImgErr] = useState(false);
+  const handleError = () => {
+    if (src.endsWith(".jpg")) setSrc(coverUrlSvg(g.id));
+    else setImgErr(true);
+  };
   return (
     <Link href={`/${g.system}/${g.id}`} className="card-hover block group">
       <div className="rounded-lg overflow-hidden border" style={{ borderColor: "rgba(255,255,255,0.07)", background: "#12121f" }}>
@@ -15,11 +20,11 @@ function GameCard({ g, color }: { g: GameSummary; color: string }) {
           {!imgErr ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={coverUrl(g.id)}
+              src={src}
               alt={g.name}
               loading="lazy"
               className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-              onError={() => setImgErr(true)}
+              onError={handleError}
             />
           ) : (
             <div
