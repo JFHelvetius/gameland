@@ -15,9 +15,25 @@ const inter = Inter({
   display: "swap",
 });
 
+const BASE_URL = "https://gameland-app.vercel.app";
+
 export const metadata: Metadata = {
   title: "Gameland — Preservación del Videojuego",
-  description: "Juega a los clásicos de NES, SNES, Mega Drive, Game Boy y Nintendo 64 directamente en tu PC.",
+  description: "Juega a los clásicos de NES, SNES, Mega Drive, Game Boy y Nintendo 64 directamente en tu PC. Descarga y juega en segundos.",
+  metadataBase: new URL(BASE_URL),
+  openGraph: {
+    title: "Gameland — Preservación del Videojuego",
+    description: "Más de 4.500 juegos retro: NES, SNES, Mega Drive, Game Boy y N64. Descarga el instalador y juega en tu PC.",
+    url: BASE_URL,
+    siteName: "Gameland",
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gameland — Preservación del Videojuego",
+    description: "Más de 4.500 juegos retro para PC. Instala y juega en segundos.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

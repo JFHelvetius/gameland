@@ -15,6 +15,14 @@ export interface GameSummary {
   system: string;
 }
 
+export interface GamesPage {
+  games: GameSummary[];
+  total: number;
+  page: number;
+  pages: number;
+  per_page: number;
+}
+
 export interface GameDetail {
   id: string;
   name: string;
@@ -28,8 +36,19 @@ export interface GameDetail {
 export const getSystems = (): Promise<System[]> =>
   fetch(`${API}/api/systems`).then((r) => r.json());
 
-export const getGames = (system: string): Promise<GameSummary[]> =>
-  fetch(`${API}/api/games/${system}`).then((r) => r.json());
+export const getGames = (
+  system: string,
+  page = 1,
+  search = "",
+  perPage = 72
+): Promise<GamesPage> => {
+  const params = new URLSearchParams({
+    page: String(page),
+    per_page: String(perPage),
+    ...(search ? { search } : {}),
+  });
+  return fetch(`${API}/api/games/${system}?${params}`).then((r) => r.json());
+};
 
 export const getGame = (gameId: string): Promise<GameDetail> =>
   fetch(`${API}/api/game/${gameId}`).then((r) => r.json());
