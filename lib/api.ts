@@ -1,4 +1,10 @@
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// Todas las llamadas van al proxy de Vercel (/api/backend/...) en producción.
+// El proxy usa API_URL (env var server-side, actualizable sin rebuild).
+// En desarrollo local, el proxy no existe, así que llamamos directamente.
+const IS_LOCAL = typeof window !== "undefined" && window.location.hostname === "localhost";
+const API = IS_LOCAL
+  ? (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000")
+  : "/api/backend";
 
 export interface System {
   id: string;
