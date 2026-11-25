@@ -1,7 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getSystems, type System } from "@/lib/api";
-
-export const dynamic = "force-dynamic";
 
 function SystemCard({ s }: { s: System }) {
   return (
@@ -33,13 +34,16 @@ function SystemCard({ s }: { s: System }) {
   );
 }
 
-export default async function Home() {
-  let systems: System[] = [];
-  try {
-    systems = await getSystems();
-  } catch {
-    // servidor offline
-  }
+export default function Home() {
+  const [systems, setSystems] = useState<System[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getSystems()
+      .then(setSystems)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <main className="min-h-screen px-6 py-12 max-w-5xl mx-auto">
@@ -53,7 +57,13 @@ export default async function Home() {
         <div className="mt-6 mx-auto w-24 h-px" style={{ background: "linear-gradient(90deg, transparent, #64748b, transparent)" }} />
       </div>
 
-      {systems.length === 0 && (
+      {loading && (
+        <p className="text-center py-20 pixel" style={{ fontSize: "9px", color: "#334155" }}>
+          CARGANDO...
+        </p>
+      )}
+
+      {!loading && systems.length === 0 && (
         <div className="rounded-xl p-8 text-center border" style={{ background: "#12121f", borderColor: "rgba(255,255,255,0.08)" }}>
           <p className="pixel mb-3" style={{ color: "#E53E3E", fontSize: "10px" }}>SERVIDOR OFFLINE</p>
           <p className="text-sm mb-4" style={{ color: "#64748b" }}>Arranca el servidor local para ver la biblioteca.</p>
