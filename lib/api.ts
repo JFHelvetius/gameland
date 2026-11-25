@@ -1,4 +1,9 @@
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// En producción todas las llamadas van a /api/backend/... (mismo origen, Route Handler proxy).
+// En desarrollo local apuntan directo al backend en localhost:8000.
+const IS_DEV = process.env.NODE_ENV === "development";
+const API = IS_DEV
+  ? (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000")
+  : "/api/backend";
 
 export interface System {
   id: string;
@@ -26,13 +31,13 @@ export interface GameDetail {
 }
 
 export const getSystems = (): Promise<System[]> =>
-  fetch(`${API}/api/systems`, { next: { revalidate: 3600 } }).then((r) => r.json());
+  fetch(`${API}/api/systems`, { cache: "no-store" }).then((r) => r.json());
 
 export const getGames = (system: string): Promise<GameSummary[]> =>
-  fetch(`${API}/api/games/${system}`, { next: { revalidate: 3600 } }).then((r) => r.json());
+  fetch(`${API}/api/games/${system}`, { cache: "no-store" }).then((r) => r.json());
 
 export const getGame = (gameId: string): Promise<GameDetail> =>
-  fetch(`${API}/api/game/${gameId}`, { next: { revalidate: 3600 } }).then((r) => r.json());
+  fetch(`${API}/api/game/${gameId}`, { cache: "no-store" }).then((r) => r.json());
 
 export const coverUrl = (gameId: string) => `${API}/api/covers/${gameId}`;
 
