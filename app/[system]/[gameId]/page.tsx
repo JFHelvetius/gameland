@@ -21,16 +21,19 @@ export default function GamePage({
     getGame(gameId).then(setGame).catch(() => {});
   }, [gameId]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     setDownloading(true);
-    // El link al download endpoint activa la generación del .exe en el servidor
-    // y el navegador descarga el archivo automáticamente.
-    const a = document.createElement("a");
-    a.href = downloadUrl(gameId);
-    a.download = "";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    try {
+      const url = await downloadUrl(gameId);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch {
+      alert("Error al obtener el enlace de descarga.");
+    }
     setTimeout(() => setDownloading(false), 4000);
   };
 

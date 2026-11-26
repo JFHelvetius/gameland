@@ -87,5 +87,17 @@ const COVERS = "https://jfhelvetius.github.io/gameland-covers";
 export const coverUrl = (gameId: string) => `${COVERS}/${gameId}.jpg`;
 export const coverUrlSvg = (gameId: string) => `${COVERS}/${gameId}.svg`;
 
-export const downloadUrl = (gameId: string) =>
-  `https://archive.org/download/gameland-roms/${gameId}.exe`;
+let _driveIndex: Record<string, string> | null = null;
+async function getDriveIndex(): Promise<Record<string, string>> {
+  if (_driveIndex) return _driveIndex;
+  const r = await fetch("/drive_index.json");
+  _driveIndex = await r.json();
+  return _driveIndex!;
+}
+
+export const downloadUrl = async (gameId: string): Promise<string> => {
+  const idx = await getDriveIndex();
+  const fileId = idx[gameId];
+  if (!fileId) throw new Error(`Sin archivo para ${gameId}`);
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+};
